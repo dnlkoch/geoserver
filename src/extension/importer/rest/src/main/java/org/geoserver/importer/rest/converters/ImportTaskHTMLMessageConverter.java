@@ -55,20 +55,17 @@ public class ImportTaskHTMLMessageConverter extends BaseMessageConverter<ImportT
     @Override
     protected void writeInternal(ImportTask task, HttpOutputMessage outputMessage)
             throws IOException, HttpMessageNotWritableException {
+        OutputStreamWriter outputStream = new OutputStreamWriter(outputMessage.getBody());
+        outputStream.write("<html><body><pre>");
 
-        try (OutputStreamWriter outputStream = new OutputStreamWriter(outputMessage.getBody())) {
+        FlushableJSONBuilder json = new FlushableJSONBuilder(outputStream);
+        ImportJSONWriter writer = new ImportJSONWriter(importer);
 
-            outputStream.write("<html><body><pre>");
+        int expand = writer.expand(1);
 
-            FlushableJSONBuilder json = new FlushableJSONBuilder(outputStream);
-            ImportJSONWriter writer = new ImportJSONWriter(importer);
+        writer.task(json, task, true, expand);
 
-            int expand = writer.expand(1);
-
-            writer.task(json, task, true, expand);
-
-            outputStream.write("</pre></body></html>");
-            outputStream.flush();
-        }
+        outputStream.write("</pre></body></html>");
+        outputStream.flush();
     }
 }

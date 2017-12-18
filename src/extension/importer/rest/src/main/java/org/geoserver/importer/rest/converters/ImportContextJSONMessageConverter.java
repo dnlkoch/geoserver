@@ -68,15 +68,13 @@ public class ImportContextJSONMessageConverter extends BaseMessageConverter<Impo
     @Override
     protected void writeInternal(ImportContext context, HttpOutputMessage outputMessage)
             throws IOException, HttpMessageNotWritableException {
+        OutputStreamWriter output = new OutputStreamWriter(outputMessage.getBody());
+        FlushableJSONBuilder json = new FlushableJSONBuilder(output);
+        ImportJSONWriter writer = new ImportJSONWriter(importer);
 
-        try (OutputStreamWriter output = new OutputStreamWriter(outputMessage.getBody())) {
-            FlushableJSONBuilder json = new FlushableJSONBuilder(output);
-            ImportJSONWriter writer = new ImportJSONWriter(importer);
+        writer.context(json, context, true, writer.expand(1));
 
-            writer.context(json, context, true, writer.expand(1));
-
-            output.flush();
-        }
+        output.flush();
     }
 
 }

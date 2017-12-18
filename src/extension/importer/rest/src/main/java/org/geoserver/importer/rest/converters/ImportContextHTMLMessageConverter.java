@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 
 import org.geoserver.importer.ImportContext;
-import org.geoserver.importer.ImportTask;
 import org.geoserver.importer.Importer;
 import org.geoserver.importer.rest.converters.ImportJSONWriter.FlushableJSONBuilder;
 import org.geoserver.rest.converters.BaseMessageConverter;
@@ -56,18 +55,16 @@ public class ImportContextHTMLMessageConverter extends BaseMessageConverter<Impo
     @Override
     protected void writeInternal(ImportContext context, HttpOutputMessage outputMessage)
             throws IOException, HttpMessageNotWritableException {
+        OutputStreamWriter output = new OutputStreamWriter(outputMessage.getBody());
+        output.write("<html><body><pre>");
 
-        try (OutputStreamWriter output = new OutputStreamWriter(outputMessage.getBody())) {
-            output.write("<html><body><pre>");
+        FlushableJSONBuilder json = new FlushableJSONBuilder(output);
+        ImportJSONWriter writer = new ImportJSONWriter(
+                importer);
 
-            FlushableJSONBuilder json = new FlushableJSONBuilder(output);
-            ImportJSONWriter writer = new ImportJSONWriter(
-                    importer);
+        writer.context(json, context, true, writer.expand(1));
 
-            writer.context(json, context, true, writer.expand(1));
-
-            output.write("</pre></body></html>");
-            output.flush();
-        }
+        output.write("</pre></body></html>");
+        output.flush();
     }
 }
