@@ -63,7 +63,7 @@ public class GeoServerKeycloakFilterTest extends GeoServerSecurityTestSupport {
 
     // locations for useful resources
     public static final String APP_URL = "http://localhost:8080/app";
-    public static final String APP_URL_WIREMOCk = "http://localhost:8080/auth";
+    public static final String APP_URL_WIREMOCK = "http://localhost:8080/auth";
     public static final String AUTH_URL = "https://cas.core.maui.mda.ca:8040/auth";
     public static final String OPENID_URL = AUTH_URL + "/realms/" + REALM;
 
@@ -152,7 +152,7 @@ public class GeoServerKeycloakFilterTest extends GeoServerSecurityTestSupport {
         AdapterConfig aConfig = new AdapterConfig();
         aConfig.setRealm(REALM);
         aConfig.setResource(CLIENT_ID);
-        aConfig.setAuthServerUrl(APP_URL_WIREMOCk);
+        aConfig.setAuthServerUrl(APP_URL_WIREMOCK);
         config = new GeoServerKeycloakFilterConfig();
         config.writeAdapterConfig(aConfig);
         config.setEnableRedirectEntryPoint(true);

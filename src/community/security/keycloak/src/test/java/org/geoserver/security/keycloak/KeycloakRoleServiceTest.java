@@ -39,7 +39,7 @@ public class KeycloakRoleServiceTest {
     public static void beforeClass() {
         keycloakSrv = new WireMockServer(wireMockConfig().dynamicPort().notifier(new ConsoleNotifier(true)));
         keycloakSrv.start();
-        authService = "http://localhost:" + keycloakSrv.port();
+        authService = "http://localhost:" + keycloakSrv.port() + "/auth";
 
         keycloakSrv.stubFor(WireMock.post(urlEqualTo("/auth/realms/master/protocol/openid-connect/token"))
                 .willReturn(aResponse()
