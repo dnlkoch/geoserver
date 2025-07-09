@@ -4,41 +4,18 @@
  */
 package org.geoserver.security.keycloak;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
-import javax.servlet.http.HttpServletResponse;
 import org.geoserver.security.GeoServerRoleService;
 import org.geoserver.security.GeoServerSecurityManager;
 import org.geoserver.security.config.PreAuthenticatedUserNameFilterConfig;
 import org.geoserver.security.config.RoleSource;
 import org.geoserver.security.config.SecurityNamedServiceConfig;
-import org.geoserver.security.filter.AuthenticationCachingFilter;
-import org.geoserver.security.filter.GeoServerAuthenticationFilter;
-import org.geoserver.security.filter.GeoServerLogoutFilter;
-import org.geoserver.security.filter.GeoServerPreAuthenticatedUserNameFilter;
-import org.geoserver.security.filter.GeoServerSecurityFilter;
+import org.geoserver.security.filter.*;
 import org.geoserver.security.impl.GeoServerRole;
 import org.geoserver.security.impl.GeoServerUser;
 import org.geoserver.security.impl.RoleCalculator;
 import org.geotools.util.logging.Logging;
 import org.keycloak.OAuth2Constants;
-import org.keycloak.adapters.AdapterDeploymentContext;
-import org.keycloak.adapters.AdapterTokenStore;
-import org.keycloak.adapters.KeycloakDeployment;
-import org.keycloak.adapters.KeycloakDeploymentBuilder;
-import org.keycloak.adapters.RequestAuthenticator;
+import org.keycloak.adapters.*;
 import org.keycloak.adapters.spi.AuthChallenge;
 import org.keycloak.adapters.spi.AuthOutcome;
 import org.keycloak.adapters.spi.HttpFacade;
@@ -54,6 +31,18 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
+
+import javax.servlet.*;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * A {@link Filter} which will use Keycloak to provide an {@link Authentication} to the active
@@ -93,7 +82,7 @@ public class GeoServerKeycloakFilter extends GeoServerPreAuthenticatedUserNameFi
         super.initializeFromConfig(config);
         GeoServerKeycloakFilterConfig keycloakConfig = (GeoServerKeycloakFilterConfig) config;
         KeycloakDeployment deployment = KeycloakDeploymentBuilder.build(keycloakConfig.readAdapterConfig());
-        deployment.setScope("openid");
+        deployment.setScope("openid offline_access");
         this.keycloakContext = new AdapterDeploymentContext(deployment);
         this.enableRedirectEntryPoint = keycloakConfig.isEnableRedirectEntryPoint();
     }
@@ -310,10 +299,13 @@ public class GeoServerKeycloakFilter extends GeoServerPreAuthenticatedUserNameFi
         };
         HttpFacade exchange = new SimpleHttpFacade(request, response);
         KeycloakDeployment deployment = keycloakContext.resolveDeployment(exchange);
+//        deployment.setScope("openid offline_access profile email");
         deployment.setDelegateBearerErrorResponseSending(true);
         AdapterTokenStore tokenStore = adapterTokenStoreFactory.createAdapterTokenStore(deployment, request, response);
         RequestAuthenticator authenticator =
-                new SpringSecurityRequestAuthenticator(exchange, request, deployment, tokenStore, -1);
+                new GeoServerKeycloakRequestAuthenticator(exchange, request, deployment, tokenStore, -1);
+//        RequestAuthenticator authenticator =
+//                new SpringSecurityRequestAuthenticator(exchange, request, deployment, tokenStore, -1);
         // perform the authentication operation
         AuthOutcome result = authenticator.authenticate();
         AuthChallenge challenge = authenticator.getChallenge();
