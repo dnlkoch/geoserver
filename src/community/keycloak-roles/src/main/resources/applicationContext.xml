@@ -1,0 +1,28 @@
+<!--
+  ~ (c) 2026 Open Source Geospatial Foundation - all rights reserved
+  ~ This code is licensed under the GPL 2.0 license, available at the root
+  ~ application directory.
+  -->
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+
+  <!-- Module status -->
+  <bean id="keycloakRolesExtension" class="org.geoserver.platform.ModuleStatusImpl">
+    <constructor-arg index="0" value="gs-keycloak-roles"/>
+    <constructor-arg index="1" value="GeoServer Keycloak Role Service"/>
+    <property name="category" value="COMMUNITY"/>
+  </bean>
+
+  <!-- Security provider (registers role service with GeoServer security subsystem) -->
+  <bean id="keycloakSecurityProvider" class="org.geoserver.security.keycloak.KeycloakSecurityProvider"/>
+
+  <!-- Web UI panel info (registers configuration panel in the admin UI) -->
+  <bean id="keycloakRoleServicePanelInfo" class="org.geoserver.security.web.keycloak.KeycloakRoleServicePanelInfo">
+    <property name="id" value="security.keycloakRoleService"/>
+    <property name="shortTitleKey" value="KeycloakRoleServicePanel.short"/>
+    <property name="titleKey" value="KeycloakRoleServicePanel.title"/>
+    <property name="descriptionKey" value="KeycloakRoleServicePanel.description"/>
+  </bean>
+
+</beans>
+

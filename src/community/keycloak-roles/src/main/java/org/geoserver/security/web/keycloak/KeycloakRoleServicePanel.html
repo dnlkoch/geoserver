@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:wicket="http://wicket.apache.org/">
+<body>
+<wicket:extend>
+  <div class="gs-panel-KeycloakRoleServicePanel gs-unordered-list-class float-start">
+
+    <!-- Keycloak Server Settings -->
+    <div class="gs-list-item-class">
+      <fieldset>
+        <legend>
+          <span>
+            <wicket:message key="keycloakSettings">Keycloak Settings</wicket:message>
+          </span>
+        </legend>
+        <div class="gs-form">
+          <div class="gs-form-group">
+            <label for="serverUrl">
+              <wicket:message key="serverUrl">Server URL</wicket:message>
+              <a href="#" wicket:id="serverUrlHelp" class="help-link"></a>
+            </label>
+            <input id="serverUrl" wicket:id="serverUrl" type="text" class="form-control" />
+          </div>
+          <div class="gs-form-group">
+            <label for="realm">
+              <wicket:message key="realm">Realm</wicket:message>
+              <a href="#" wicket:id="realmHelp" class="help-link"></a>
+            </label>
+            <input id="realm" wicket:id="realm" type="text" class="form-control" />
+          </div>
+          <div class="gs-form-group">
+            <label for="clientId">
+              <wicket:message key="clientId">Client ID (optional)</wicket:message>
+              <a href="#" wicket:id="clientIdHelp" class="help-link"></a>
+            </label>
+            <input id="clientId" wicket:id="clientId" type="text" class="form-control" />
+          </div>
+        </div>
+      </fieldset>
+    </div>
+
+    <!-- Service Account Credentials -->
+    <div class="gs-list-item-class">
+      <fieldset>
+        <legend>
+          <span>
+            <wicket:message key="serviceAccountCredentials">Service Account Credentials</wicket:message>
+          </span>
+        </legend>
+        <div class="gs-form">
+          <div class="gs-form-group">
+            <label for="serviceAccountClientId">
+              <wicket:message key="serviceAccountClientId">Service Account Client ID</wicket:message>
+              <a href="#" wicket:id="serviceAccountClientIdHelp" class="help-link"></a>
+            </label>
+            <input id="serviceAccountClientId" wicket:id="serviceAccountClientId" type="text" class="form-control" />
+          </div>
+          <div class="gs-form-group">
+            <label for="clientSecret">
+              <wicket:message key="clientSecret">Client Secret</wicket:message>
+              <a href="#" wicket:id="clientSecretHelp" class="help-link"></a>
+            </label>
+            <input id="clientSecret" wicket:id="clientSecret" type="password" class="form-control" />
+          </div>
+        </div>
+      </fieldset>
+    </div>
+
+    <!-- Actions -->
+    <div class="gs-list-item-class">
+      <fieldset>
+        <legend>
+          <span>
+            <wicket:message key="actions">Actions</wicket:message>
+          </span>
+        </legend>
+        <div class="gs-form">
+          <div class="gs-form-group">
+            <a wicket:id="testConnection" class="btn btn-default">
+              <wicket:message key="testConnection">Test Connection</wicket:message>
+            </a>
+          </div>
+          <div class="gs-form-group">
+            <a wicket:id="synchronizeRoles" class="btn btn-default">
+              <wicket:message key="synchronizeRoles">Synchronize Roles</wicket:message>
+            </a>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+
+  </div>
+</wicket:extend>
+</body>
+</html>
+

@@ -150,6 +150,7 @@
         <module>rest-openapi</module>
         <module>schemaless-features</module>
         <module>web-service-auth</module>
+        <module>keycloak-roles</module>
         <module>gwc-mbtiles</module>
         <module>vsi</module>
         <module>libdeflate</module>
@@ -469,6 +470,12 @@
       <id>web-service-auth</id>
       <modules>
         <module>web-service-auth</module>
+      </modules>
+    </profile>
+    <profile>
+      <id>keycloak-roles</id>
+      <modules>
+        <module>keycloak-roles</module>
       </modules>
     </profile>
     <profile>
